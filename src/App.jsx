@@ -63,7 +63,7 @@ function App() {
       loginCheck();
       getProducts();
     } catch (error) {
-      console.log(error);
+      alert('登入失敗');
     }
 
   }
@@ -106,7 +106,7 @@ function App() {
   }
 
   const handleImageChange = (index,value) =>{
-    console.log(index,value);
+  
     setSelectedProduct((prevData)=>{
 
       const newImages = [...prevData.imagesUrl];
@@ -131,7 +131,7 @@ function App() {
   const handleAddImage = ()=>{
     setSelectedProduct((prevData)=>({
       ...prevData,
-      imagesUrl:[prevData.imagesUrl,'']
+      imagesUrl:[...prevData.imagesUrl,'']
     }));
   }
 
@@ -148,7 +148,7 @@ function App() {
       const res = await axios.post(`${base_url}/api/user/check`,{});
       setIsAuth(res.data.success);
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message);
     }
   }
 
@@ -157,14 +157,13 @@ function App() {
       const res = await axios.get(`${base_url}/api/${api_path}/admin/products/all`);
       setProducts(Object.values(res.data.products));
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.message)
     }
   }
 
   const deleteProduct = async (id)=>{
     try {
       const res = await axios.delete(`${base_url}/api/${api_path}/admin/product/${id}`);
-      console.log(res);
       productModalRef.current.hide();
       getProducts();
     } catch (error) {
@@ -187,19 +186,19 @@ function App() {
     try {
       if(modalType === 'edit'){
         const res = await axios.put(`${base_url}/api/${api_path}/admin/product/${id}`,productData);
-        console.log(res.data);
+        
       }else{
         const res = await axios.post(`${base_url}/api/${api_path}/admin/product`,productData);
-        console.log(res.data);
+        
       }
       productModalRef.current.hide();
       getProducts();
 
     } catch (error) {
       if(modalType === 'edit'){
-        console.log('更新失敗:',error.response.data.message);
+        alert('更新失敗:',error.response.data.message);
       }else{
-        console.log('新增失敗:',error.response.data.message);
+        alert('新增失敗:',error.response.data.message);
       }
     }
   }
@@ -262,7 +261,7 @@ function App() {
                 <input type="email" id='username' className='col-form-control col-10' name='username' onChange={handleInputChange} required />
               </div>
               <div className="mb-3 row">
-                <label htmlFor="password" className='col-form-label col-2 text-start'>密碼{formData.password}</label>
+                <label htmlFor="password" className='col-form-label col-2 text-start'>密碼</label>
                 <input type="password" id='password' className='col-form-control col-10' name='password' onChange={handleInputChange} required />
               </div>
               <div className="mb-3 row">
@@ -337,7 +336,7 @@ function App() {
                         </div>
                         <div className="mb-3 col-6">
                           <label htmlFor="num" className='form-label'>數量</label>
-                          <input type="text" placeholder='請輸入數量' className='form-control' id='num' value={selectedProduct.num} onChange={handleModalInputChange}/>
+                          <input type="text" placeholder='請輸入數量' className='form-control' id='num' value={selectedProduct.num} onChange={handleModalInputChange} min='0'/>
                         </div>
                         <div className="mb-3 col-6">
                           <label htmlFor="unit" className='form-label'>單位</label>
@@ -345,11 +344,11 @@ function App() {
                         </div>
                         <div className="mb-3 col-6">
                           <label htmlFor="originPrice" className='form-label'>原價</label>
-                          <input type="text" placeholder='請輸入原價' className='form-control' id='originPrice' value={selectedProduct.originPrice} onChange={handleModalInputChange}/>
+                          <input type="num" placeholder='請輸入原價' className='form-control' id='originPrice' value={selectedProduct.originPrice} onChange={handleModalInputChange} min='0'/>
                         </div>
                         <div className="mb-3 col-6">
                           <label htmlFor="price" className='form-label'>售價</label>
-                          <input type="text" placeholder='請輸入售價' className='form-control' id='price' value={selectedProduct.price} onChange={handleModalInputChange}/>
+                          <input type="num" placeholder='請輸入售價' className='form-control' id='price' value={selectedProduct.price} onChange={handleModalInputChange} min='0'/>
                         </div>
                         <div className="col-12 mb-3">
                           <label htmlFor="description" className='form-label'>商品描述</label>
